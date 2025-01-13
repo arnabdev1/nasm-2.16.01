@@ -1,3 +1,5 @@
+// modified nasm.c for VA Fuzz
+
 /* ----------------------------------------------------------------------- *
  *
  *   Copyright 1996-2022 The NASM Authors - All Rights Reserved
