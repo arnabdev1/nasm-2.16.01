@@ -1,3 +1,116 @@
+// removed
+
+// {
+//     "name": "--limit",
+//     "type": "choice",
+//     "choices": [
+//         "passes",
+//         "stalled-passes",
+//         "macro-levels",
+//         "macro-tokens",
+//         "mmacros",
+//         "rep",
+//         "eval",
+//         "lines"
+//     ],
+//     "connector": " "
+// }
+// {
+//     "opt": "--prefix",
+//     "type": "string",
+//     "connector": " "
+// },
+// {
+//     "opt": "--suffix",
+//     "type": "string",
+//     "connector": " "
+// },
+// {
+//     "opt": "--lprefix",
+//     "type": "string",
+//     "connector": " "
+// },
+// {
+//     "opt": "--lpostfix",
+//     "type": "string",
+//     "connector": " "
+// },
+
+// {
+//     "opt": "-I",
+//     "type": "string",
+//     "connector": " "
+// },
+// {
+//     "opt": "-P",
+//     "type": "string",
+//     "connector": " "
+// },
+// {
+//     "opt": "-D",
+//     "type": "string",
+//     "connector": "="
+// },
+// {
+//     "opt": "-U",
+//     "type": "string",
+//     "connector": " "
+// },
+// {
+//     "opt": "--pragma",
+//     "type": "string",
+//     "connector": " "
+// },
+// {
+//     "opt": "--before",
+//     "type": "string",
+//     "connector": " "
+// },
+// {
+//     "opt": "-F",
+//     "type": "string",
+//     "connector": " "
+// },
+// {
+//     "opt": "-g",
+//     "type": "string",
+//     "connector": ""
+// },
+// {
+//     "opt": "-MF",
+//     "type": "string",
+//     "connector": " "
+// },
+// {
+//     "opt": "-MD",
+//     "type": "string",
+//     "connector": " "
+// },
+// {
+//     "opt": "-MT",
+//     "type": "string",
+//     "connector": " "
+// },
+// {
+//     "opt": "-MQ",
+//     "type": "string",
+//     "connector": " "
+// },
+// {
+//     "opt": "-Z",
+//     "type": "string",
+//     "connector": " "
+// },
+// {
+//     "opt": "-@",
+//     "type": "string",
+//     "connector": " "
+// },
+// {
+//     "opt": "-o",
+//     "type": "string",
+//     "connector": " "
+// },
 /* ----------------------------------------------------------------------- *
  *
  *   Copyright 1996-2022 The NASM Authors - All Rights Reserved
@@ -1031,16 +1144,16 @@ static const struct textargs textopts[] = {
     {"version", OPT_VERSION, ARG_NO, 0},
     {"help", OPT_HELP, ARG_NO, 0},
     {"abort-on-panic", OPT_ABORT_ON_PANIC, ARG_NO, 0},
-    {"prefix", OPT_MANGLE, ARG_YES, LM_GPREFIX},
+    // {"prefix", OPT_MANGLE, ARG_YES, LM_GPREFIX},
     {"postfix", OPT_MANGLE, ARG_YES, LM_GSUFFIX},
     {"gprefix", OPT_MANGLE, ARG_YES, LM_GPREFIX},
     {"gpostfix", OPT_MANGLE, ARG_YES, LM_GSUFFIX},
-    {"lprefix", OPT_MANGLE, ARG_YES, LM_LPREFIX},
-    {"lpostfix", OPT_MANGLE, ARG_YES, LM_LSUFFIX},
+    // {"lprefix", OPT_MANGLE, ARG_YES, LM_LPREFIX},
+    // {"lpostfix", OPT_MANGLE, ARG_YES, LM_LSUFFIX},
     {"include", OPT_INCLUDE, ARG_YES, 0},
-    {"pragma", OPT_PRAGMA, ARG_YES, 0},
-    {"before", OPT_BEFORE, ARG_YES, 0},
-    {"limit-", OPT_LIMIT, ARG_YES, 0},
+    // {"pragma", OPT_PRAGMA, ARG_YES, 0},
+    // {"before", OPT_BEFORE, ARG_YES, 0},
+    // {"limit-", OPT_LIMIT, ARG_YES, 0},
     {"keep-all", OPT_KEEP_ALL, ARG_NO, 0},
     {"no-line", OPT_NO_LINE, ARG_NO, 0},
     {"debug", OPT_DEBUG, ARG_MAYBE, 0},
@@ -1079,10 +1192,10 @@ static bool process_arg(char *p, char *q, int pass)
                 error_file = stdout;
             break;
 
-        case 'o': /* output file */
-            if (pass == 2)
-                copy_filename(&outname, param, "output");
-            break;
+        // case 'o': /* output file */
+        //     if (pass == 2)
+        //         copy_filename(&outname, param, "output");
+        //     break;
 
         case 'f': /* output format */
             if (pass == 1)
@@ -1167,21 +1280,21 @@ static bool process_arg(char *p, char *q, int pass)
             break;
 
         case 'u': /* un-define */
-        case 'U':
-            if (pass == 2)
-                pp_pre_undefine(param);
-            break;
+        // case 'U':
+        //     if (pass == 2)
+        //         pp_pre_undefine(param);
+        //     break;
 
         case 'i': /* include search path */
-        case 'I':
-            if (pass == 1)
-                strlist_add(include_path, param);
-            break;
+        // case 'I':
+        //     if (pass == 1)
+        //         strlist_add(include_path, param);
+        //     break;
 
-        case 'l': /* listing file */
-            if (pass == 2)
-                copy_filename(&listname, param, "listing");
-            break;
+        // case 'l': /* listing file */
+        //     if (pass == 2)
+        //         copy_filename(&listname, param, "listing");
+        //     break;
 
         case 'L': /* listing options */
             if (pass == 2)
@@ -1191,18 +1304,18 @@ static bool process_arg(char *p, char *q, int pass)
             }
             break;
 
-        case 'Z': /* error messages file */
-            if (pass == 1)
-                copy_filename(&errname, param, "error");
-            break;
+        // case 'Z': /* error messages file */
+        //     if (pass == 1)
+        //         copy_filename(&errname, param, "error");
+        //     break;
 
-        case 'F': /* specify debug format */
-            if (pass == 1)
-            {
-                using_debug_info = true;
-                debug_format = param;
-            }
-            break;
+        // case 'F': /* specify debug format */
+        //     if (pass == 1)
+        //     {
+        //         using_debug_info = true;
+        //         debug_format = param;
+        //     }
+        //     break;
 
         case 'X': /* specify error reporting format */
             if (pass == 1)
@@ -1216,14 +1329,14 @@ static bool process_arg(char *p, char *q, int pass)
             }
             break;
 
-        case 'g':
-            if (pass == 1)
-            {
-                using_debug_info = true;
-                if (p[2])
-                    debug_format = nasm_skip_spaces(p + 2);
-            }
-            break;
+        // case 'g':
+        //     if (pass == 1)
+        //     {
+        //         using_debug_info = true;
+        //         if (p[2])
+        //             debug_format = nasm_skip_spaces(p + 2);
+        //     }
+        //     break;
 
         case 'h':
             help(stdout);
@@ -1270,12 +1383,12 @@ static bool process_arg(char *p, char *q, int pass)
                 case 'W':
                     quote_for_make = quote_for_wmake;
                     break;
-                case 'D':
-                case 'F':
-                case 'T':
-                case 'Q':
-                    advance = true;
-                    break;
+                // case 'D':
+                // case 'F':
+                // case 'T':
+                // case 'Q':
+                    // advance = true;
+                    // break;
                 default:
                     break;
                 }
@@ -1291,17 +1404,17 @@ static bool process_arg(char *p, char *q, int pass)
                     operating_mode = OP_DEPEND;
                     depend_missing_ok = true;
                     break;
-                case 'P':
-                    depend_emit_phony = true;
-                    break;
-                case 'D':
-                    operating_mode |= OP_DEPEND;
-                    if (q && (q[0] != '-' || q[1] == '\0'))
-                    {
-                        depend_file = q;
-                        advance = true;
-                    }
-                    break;
+                // case 'P':
+                //     depend_emit_phony = true;
+                //     break;
+                // case 'D':
+                //     operating_mode |= OP_DEPEND;
+                //     if (q && (q[0] != '-' || q[1] == '\0'))
+                //     {
+                //         depend_file = q;
+                //         advance = true;
+                //     }
+                //     break;
                 case 'F':
                     depend_file = q;
                     advance = true;
