@@ -48,7 +48,7 @@
 #include "sync.h"
 #include "disasm.h"
 
-#define BPL 8                   /* bytes per line of hex dump */
+#define BPL 8 /* bytes per line of hex dump */
 
 static const char *help =
     "usage: ndisasm [-a] [-i] [-h] [-r] [-u] [-b bits] [-o origin] [-s sync...]\n"
@@ -63,7 +63,7 @@ static const char *help =
     "   -p selects the preferred vendor instruction set (intel, amd, cyrix, idt)\n";
 
 static void output_ins(uint64_t, uint8_t *, int, char *);
-static void skip(uint32_t dist, FILE * fp);
+static void skip(uint32_t dist, FILE *fp);
 
 void nasm_verror(errflags severity, const char *fmt, va_list val)
 {
@@ -103,13 +103,16 @@ int main(int argc, char **argv)
     offset = 0;
     init_sync();
 
-    while (--argc) {
+    while (--argc)
+    {
         char *v, *vv, *p = *++argv;
-        if (*p == '-' && p[1]) {
+        if (*p == '-' && p[1])
+        {
             p++;
             while (*p)
-                switch (nasm_tolower(*p)) {
-                case 'a':      /* auto or intelligent sync */
+                switch (nasm_tolower(*p))
+                {
+                case 'a': /* auto or intelligent sync */
                 case 'i':
                     autosync = true;
                     p++;
@@ -121,166 +124,207 @@ int main(int argc, char **argv)
                 case 'v':
                     fprintf(stderr,
                             "NDISASM version %s compiled on %s\n",
-			    nasm_version, nasm_date);
+                            nasm_version, nasm_date);
                     return 0;
-                case 'u':	/* -u for -b 32, -uu for -b 64 */
-		    if (bits < 64)
-			bits <<= 1;
+                case 'u': /* -u for -b 32, -uu for -b 64 */
+                    if (bits < 64)
+                        bits <<= 1;
                     p++;
                     break;
-                case 'b':      /* bits */
-                    v = p[1] ? p + 1 : --argc ? *++argv : NULL;
-                    if (!v) {
+                case 'b': /* bits */
+                    v = p[1] ? p + 1 : --argc ? *++argv
+                                              : NULL;
+                    if (!v)
+                    {
                         fprintf(stderr, "%s: `-b' requires an argument\n",
                                 pname);
                         return 1;
                     }
-		    b = strtoul(v, &ep, 10);
-		    if (*ep || !(bits == 16 || bits == 32 || bits == 64)) {
+                    b = strtoul(v, &ep, 10);
+                    if (*ep || !(bits == 16 || bits == 32 || bits == 64))
+                    {
                         fprintf(stderr, "%s: argument to `-b' should"
-                                " be 16, 32 or 64\n", pname);
-                    } else {
-			bits = b;
-		    }
-                    p = "";     /* force to next argument */
+                                        " be 16, 32 or 64\n",
+                                pname);
+                    }
+                    else
+                    {
+                        bits = b;
+                    }
+                    p = ""; /* force to next argument */
                     break;
-                case 'o':      /* origin */
-                    v = p[1] ? p + 1 : --argc ? *++argv : NULL;
-                    if (!v) {
+                case 'o': /* origin */
+                    v = p[1] ? p + 1 : --argc ? *++argv
+                                              : NULL;
+                    if (!v)
+                    {
                         fprintf(stderr, "%s: `-o' requires an argument\n",
                                 pname);
                         return 1;
                     }
                     offset = readnum(v, &rn_error);
-                    if (rn_error) {
+                    if (rn_error)
+                    {
                         fprintf(stderr,
                                 "%s: `-o' requires a numeric argument\n",
                                 pname);
                         return 1;
                     }
-                    p = "";     /* force to next argument */
+                    p = ""; /* force to next argument */
                     break;
-                case 's':      /* sync point */
-                    v = p[1] ? p + 1 : --argc ? *++argv : NULL;
-                    if (!v) {
+                case 's': /* sync point */
+                    v = p[1] ? p + 1 : --argc ? *++argv
+                                              : NULL;
+                    if (!v)
+                    {
                         fprintf(stderr, "%s: `-s' requires an argument\n",
                                 pname);
                         return 1;
                     }
                     add_sync(readnum(v, &rn_error), 0L);
-                    if (rn_error) {
+                    if (rn_error)
+                    {
                         fprintf(stderr,
                                 "%s: `-s' requires a numeric argument\n",
                                 pname);
                         return 1;
                     }
-                    p = "";     /* force to next argument */
+                    p = ""; /* force to next argument */
                     break;
-                case 'e':      /* skip a header */
-                    v = p[1] ? p + 1 : --argc ? *++argv : NULL;
-                    if (!v) {
+                case 'e': /* skip a header */
+                    v = p[1] ? p + 1 : --argc ? *++argv
+                                              : NULL;
+                    if (!v)
+                    {
                         fprintf(stderr, "%s: `-e' requires an argument\n",
                                 pname);
                         return 1;
                     }
                     initskip = readnum(v, &rn_error);
-                    if (rn_error) {
+                    if (rn_error)
+                    {
                         fprintf(stderr,
                                 "%s: `-e' requires a numeric argument\n",
                                 pname);
                         return 1;
                     }
-                    p = "";     /* force to next argument */
+                    p = ""; /* force to next argument */
                     break;
-                case 'k':      /* skip a region */
-                    v = p[1] ? p + 1 : --argc ? *++argv : NULL;
-                    if (!v) {
+                case 'k': /* skip a region */
+                    v = p[1] ? p + 1 : --argc ? *++argv
+                                              : NULL;
+                    if (!v)
+                    {
                         fprintf(stderr, "%s: `-k' requires an argument\n",
                                 pname);
                         return 1;
                     }
                     vv = strchr(v, ',');
-                    if (!vv) {
+                    if (!vv)
+                    {
                         fprintf(stderr,
                                 "%s: `-k' requires two numbers separated"
-                                " by a comma\n", pname);
+                                " by a comma\n",
+                                pname);
                         return 1;
                     }
                     *vv++ = '\0';
                     nextsync = readnum(v, &rn_error);
-                    if (rn_error) {
+                    if (rn_error)
+                    {
                         fprintf(stderr,
                                 "%s: `-k' requires numeric arguments\n",
                                 pname);
                         return 1;
                     }
                     synclen = readnum(vv, &rn_error);
-                    if (rn_error) {
+                    if (rn_error)
+                    {
                         fprintf(stderr,
                                 "%s: `-k' requires numeric arguments\n",
                                 pname);
                         return 1;
                     }
                     add_sync(nextsync, synclen);
-                    p = "";     /* force to next argument */
+                    p = ""; /* force to next argument */
                     break;
-                case 'p':      /* preferred vendor */
-                    v = p[1] ? p + 1 : --argc ? *++argv : NULL;
-                    if (!v) {
+                case 'p': /* preferred vendor */
+                    v = p[1] ? p + 1 : --argc ? *++argv
+                                              : NULL;
+                    if (!v)
+                    {
                         fprintf(stderr, "%s: `-p' requires an argument\n",
                                 pname);
                         return 1;
                     }
-                    if (!strcmp(v, "intel")) {
+                    if (!strcmp(v, "intel"))
+                    {
                         iflag_clear_all(&prefer); /* default */
-                    } else if (!strcmp(v, "amd")) {
+                    }
+                    else if (!strcmp(v, "amd"))
+                    {
                         iflag_clear_all(&prefer);
                         iflag_set(&prefer, IF_AMD);
                         iflag_set(&prefer, IF_3DNOW);
-                    } else if (!strcmp(v, "cyrix")) {
+                    }
+                    else if (!strcmp(v, "cyrix"))
+                    {
                         iflag_clear_all(&prefer);
                         iflag_set(&prefer, IF_CYRIX);
                         iflag_set(&prefer, IF_3DNOW);
-                    } else if (!strcmp(v, "idt") ||
-                               !strcmp(v, "centaur") ||
-                               !strcmp(v, "winchip")) {
+                    }
+                    else if (!strcmp(v, "idt") ||
+                             !strcmp(v, "centaur") ||
+                             !strcmp(v, "winchip"))
+                    {
                         iflag_clear_all(&prefer);
                         iflag_set(&prefer, IF_3DNOW);
-                    } else {
+                    }
+                    else
+                    {
                         fprintf(stderr,
                                 "%s: unknown vendor `%s' specified with `-p'\n",
                                 pname, v);
                         return 1;
                     }
-                    p = "";     /* force to next argument */
+                    p = ""; /* force to next argument */
                     break;
-                default:       /*bf */
+                default: /*bf */
                     fprintf(stderr, "%s: unrecognised option `-%c'\n",
                             pname, *p);
                     return 1;
                 }
-        } else if (!filename) {
+        }
+        else if (!filename)
+        {
             filename = p;
-        } else {
+        }
+        else
+        {
             fprintf(stderr, "%s: more than one filename specified\n",
                     pname);
             return 1;
         }
     }
 
-    if (!filename) {
+    if (!filename)
+    {
         fprintf(stderr, help, pname);
         return 0;
     }
 
-    if (strcmp(filename, "-")) {
+    if (strcmp(filename, "-"))
+    {
         fp = fopen(filename, "rb");
-        if (!fp) {
+        if (!fp)
+        {
             fprintf(stderr, "%s: unable to open `%s': %s\n",
                     pname, filename, strerror(errno));
             return 1;
         }
-    } else {
+    }
+    else
+    {
         nasm_set_binary_mode(stdin);
         fp = stdin;
     }
@@ -296,42 +340,47 @@ int main(int argc, char **argv)
 
     p = q = buffer;
     nextsync = next_sync(offset, &synclen);
-    do {
+    do
+    {
         int32_t to_read = buffer + sizeof(buffer) - p;
-	if ((nextsync || synclen) &&
-	    to_read > nextsync - offset - (p - q))
+        if ((nextsync || synclen) &&
+            to_read > nextsync - offset - (p - q))
             to_read = nextsync - offset - (p - q);
-        if (to_read) {
+        if (to_read)
+        {
             lenread = fread(p, 1, to_read, fp);
             if (lenread == 0)
-                eof = true;     /* help along systems with bad feof */
-        } else
+                eof = true; /* help along systems with bad feof */
+        }
+        else
             lenread = 0;
         p += lenread;
         if ((nextsync || synclen) &&
-	    (uint32_t)offset == nextsync) {
-            if (synclen) {
-                fprintf(stdout, "%08"PRIX64"  skipping 0x%"PRIX32" bytes\n",
-			offset, synclen);
+            (uint32_t)offset == nextsync)
+        {
+            if (synclen)
+            {
+                fprintf(stdout, "%08" PRIX64 "  skipping 0x%" PRIX32 " bytes\n",
+                        offset, synclen);
                 offset += synclen;
                 skip(synclen, fp);
             }
             p = q = buffer;
             nextsync = next_sync(offset, &synclen);
         }
-        while (p > q && (p - q >= INSN_MAX || lenread == 0)) {
+        while (p > q && (p - q >= INSN_MAX || lenread == 0))
+        {
             lendis = disasm((uint8_t *)q, INSN_MAX, outbuf, sizeof(outbuf),
-			    bits, offset, autosync, &prefer);
-            if (!lendis || lendis > (p - q)
-                || ((nextsync || synclen) &&
-		    (uint32_t)lendis > nextsync - offset))
-                lendis = eatbyte((uint8_t *) q, outbuf, sizeof(outbuf), bits);
-            output_ins(offset, (uint8_t *) q, lendis, outbuf);
+                            bits, offset, autosync, &prefer);
+            if (!lendis || lendis > (p - q) || ((nextsync || synclen) && (uint32_t)lendis > nextsync - offset))
+                lendis = eatbyte((uint8_t *)q, outbuf, sizeof(outbuf), bits);
+            output_ins(offset, (uint8_t *)q, lendis, outbuf);
             q += lendis;
             offset += lendis;
         }
-        if (q >= buffer + INSN_MAX) {
-            uint8_t *r = (uint8_t *) buffer, *s = (uint8_t *) q;
+        if (q >= buffer + INSN_MAX)
+        {
+            uint8_t *r = (uint8_t *)buffer, *s = (uint8_t *)q;
             int count = p - q;
             while (count--)
                 *r++ = *s++;
@@ -350,10 +399,11 @@ static void output_ins(uint64_t offset, uint8_t *data,
                        int datalen, char *insn)
 {
     int bytes;
-    fprintf(stdout, "%08"PRIX64"  ", offset);
+    fprintf(stdout, "%08" PRIX64 "  ", offset);
 
     bytes = 0;
-    while (datalen > 0 && bytes < BPL) {
+    while (datalen > 0 && bytes < BPL)
+    {
         fprintf(stdout, "%02X", *data++);
         bytes++;
         datalen--;
@@ -361,10 +411,12 @@ static void output_ins(uint64_t offset, uint8_t *data,
 
     fprintf(stdout, "%*s%s\n", (BPL + 1 - bytes) * 2, "", insn);
 
-    while (datalen > 0) {
+    while (datalen > 0)
+    {
         fprintf(stdout, "         -");
         bytes = 0;
-        while (datalen > 0 && bytes < BPL) {
+        while (datalen > 0 && bytes < BPL)
+        {
             fprintf(stdout, "%02X", *data++);
             bytes++;
             datalen--;
@@ -377,20 +429,22 @@ static void output_ins(uint64_t offset, uint8_t *data,
  * Skip a certain amount of data in a file, either by seeking if
  * possible, or if that fails then by reading and discarding.
  */
-static void skip(uint32_t dist, FILE * fp)
+static void skip(uint32_t dist, FILE *fp)
 {
-    char buffer[256];           /* should fit on most stacks :-) */
+    char buffer[256]; /* should fit on most stacks :-) */
 
     /*
      * Got to be careful with fseek: at least one fseek I've tried
      * doesn't approve of SEEK_CUR. So I'll use SEEK_SET and
      * ftell... horrible but apparently necessary.
      */
-    if (fseek(fp, dist + ftell(fp), SEEK_SET)) {
-        while (dist > 0) {
-            uint32_t len = (dist < sizeof(buffer) ?
-                                 dist : sizeof(buffer));
-            if (fread(buffer, 1, len, fp) < len) {
+    if (fseek(fp, dist + ftell(fp), SEEK_SET))
+    {
+        while (dist > 0)
+        {
+            uint32_t len = (dist < sizeof(buffer) ? dist : sizeof(buffer));
+            if (fread(buffer, 1, len, fp) < len)
+            {
                 perror("fread");
                 exit(1);
             }
